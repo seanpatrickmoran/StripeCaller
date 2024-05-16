@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from ..utils.load_HiC import *
-from .functions import enrichment_score2, phased_enrichment_score2, find_max_slice, phased_max_slice_arr, merge_positions, get_stripe_and_widths, get_stripe_and_widths_new
+from .functions import enrichment_score2, phased_enrichment_score2, find_max_slice, phased_max_slice_arr, merge_positions, get_stripe_and_widths, get_stripe_and_widths_new, spectral_flatness, partition_1D_mat
 from .mat_ops import strata2vertical, strata2horizontal, blank_diagonal_sparse_from_strata
 
 import numpy as np
