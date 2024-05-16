@@ -9,6 +9,8 @@ from multiprocessing import Pool, cpu_count
 # from functools import partial
 from itertools import repeat
 
+import pickle
+
 
 __version__ = '0.0.1'
 
@@ -258,11 +260,12 @@ def stripe_caller_all(
         # np.save('hmat.npy', mat)
 
         print(' Finding candidate peaks:')
-        h_Peaks = get_stripe_and_widths_new(
+        h_Peaks, h_spectral_flat_dict = get_stripe_and_widths_new(
             mat, (max_range + min_length) // resolution, nstrata_blank,
             sigma=sigma, rel_height=rel_height, max_width=max_width // resolution,
             gabor_freq=gabor_freq, gabor_theta=1
         )
+                
         print(f' {len(h_Peaks)} identified')
 
         if log_path is not None and len(log_path) > 0:
@@ -299,7 +302,7 @@ def stripe_caller_all(
         # np.save('vmat.npy', mat)
 
         print(' Finding candidate peaks:')
-        v_Peaks = get_stripe_and_widths_new(
+        v_Peaks, v_spectral_flat_dict = get_stripe_and_widths_new(
             mat, (max_range + min_length) // resolution, nstrata_blank,
             sigma=sigma, rel_height=rel_height, max_width=max_width // resolution,
             gabor_freq=gabor_freq, gabor_theta=1
@@ -354,5 +357,11 @@ def stripe_caller_all(
                         in_centro = True
             if not in_centro:
                 f.write(f'{ch}\t{(st-tl)*resolution}\t{min((ed-hd), st)*resolution}\t{ch}\t{st*resolution}\t{ed*resolution}\t{10 ** (- sc)}\n')
+
+            
+        pklname = output_file.split('.txt')[0]
+        with open(f"{pklname}.pkl", 'wb') as pfile:
+            pickle.dump([h_spectral_flat_dict, v_spectral_flat_dict], pfile)
+                
     f.close()
 
