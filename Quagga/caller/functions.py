@@ -57,7 +57,7 @@ def get_stripe_and_widths_new(mat, nstrata_gap=400, nstrata_blank=10, sigma=12.,
     # 051624 _ Check Spectral Flatness
     spectral_indices = {}
     for i in range(len(s_max)):
-        spectral_indices[s_max[i]] = partition_1D_mat((smax[i],s_widths[i]),mat_sum)
+        spectral_indices[s_max[i]] = partition_1D_mat((s_max[i],s_widths[i]),mat_sum)
     #
     return {i: j for (i, j) in zip(s_max, s_widths)}, spectral_indices
 
