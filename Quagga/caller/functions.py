@@ -53,7 +53,13 @@ def get_stripe_and_widths_new(mat, nstrata_gap=400, nstrata_blank=10, sigma=12.,
     # np.savetxt('s_max.txt', s_max)
     s_widths = signal.peak_widths(s_filtered, peaks=s_max, rel_height=rel_height)[0]
     s_widths[s_widths > max_width] = max_width
-    return {i: j for (i, j) in zip(s_max, s_widths)}
+    #
+    # 051624 _ Check Spectral Flatness
+    spectral_indices = {}
+    for i in range(len(s_max)):
+        spectral_indices[s_max[i]] = partition_1D_mat((smax[i],s_widths[i]),mat_sum)
+    #
+    return {i: j for (i, j) in zip(s_max, s_widths)}, spectral_indices
 
 
 def get_stripe_and_widths(mat, step=1800, sigma=12., rel_height=0.3):
@@ -460,5 +466,21 @@ def merge_positions(lst):
     new_lst.append(_merge(temp))
     return new_lst
 
+def spectral_flatness(signal):
+    # take in 1D signal
+    # returns geometric mean / mean
+    #
+    signal = np.array(signal)
+    signal += 1e-10
+    return np.exp(np.mean(np.log(signal))) / np.mean(signal)
+
+def partition_1D_mat(indices, arr):
+    idx,width=indices
+    left,right = idx - width // 2, idx + width // 2 + 1
+    bound_left = max(0,left-width)
+    bound_right = min(len(arr)-1,right+width)
+    off_peak = arr[bound_left:left]+arr[right:bound_right]
+    wiener_entropy = sectral_flatness(off_peak)
+    return wiener_entropy
 
 
