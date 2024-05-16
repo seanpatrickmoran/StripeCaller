@@ -476,11 +476,13 @@ def spectral_flatness(signal):
 
 def partition_1D_mat(indices, arr):
     idx,width=indices
+    idx=int(idx)
+    width=int(width)
     left,right = idx - width // 2, idx + width // 2 + 1
     bound_left = max(0,left-width)
     bound_right = min(len(arr)-1,right+width)
     off_peak = arr[bound_left:left]+arr[right:bound_right]
-    wiener_entropy = sectral_flatness(off_peak)
+    wiener_entropy = spectral_flatness(off_peak)
     return wiener_entropy
 
 
